@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+   <string name="app_name">BitFont</string>
+   <string name="select_font_file">Select font file</string>
+   <string name="config_font">Config BitmapFont</string>
+   <string name="file_picker">File Picker</string>
+   <string name="please_wait">Please Wait...</string>
+   <string name="generating">Generating...</string>
+   <string name="warn_font_greater_than_page"><b>FONT SIZE</b> can\'t be greater than <b>PAGE SIZE</b></string>
+   <string name="go_up">../ (Go Up)</string>
+   <string name="file_does_not_exist">File does not exist!!</string>
+   <string name="request_pick_file">Please pick a file...</string>
+   <string name="request_select_dir">Please select a destination directory...</string>
+   <string name="warn_invalid_number">Invalid number!!</string>
+   <string name="warn_empty_edittext">Cannot be empty!!</string>
+   <string name="warn_enter_higher_num">Value cannot be less than "%d"</string>
+   <string name="warn_enter_smaller_num">Value cannot be greater than "%d"</string>
+   <string name="ok">OK</string>
+   <string name="cancel">cancel</string>
+   <string name="label_font_name">Font Name:</string>
+   <string name="label_font_size">Font Size:</string>
+   <string name="label_page_size">Page Size:</string>
+   <string name="label_dest_dir">Destination Directory:</string>
+   <string name="label_no_file_selected">No File Selected:</string>
+   <string name="label_generate">Generate</string>
+   <string name="dialog_permission_title">Grant Permissions</string>
+   <string name="dialog_permission_message">Grant all required permissions in order to continue.</string>
+   <string name="go_to_settings">Go to settings</string>
+   <string name="exit">Exit</string>
+   <string name="try_again">Try again</string>
+   <string name="closing_app">Closing app&#8230;</string>
+</resources>
