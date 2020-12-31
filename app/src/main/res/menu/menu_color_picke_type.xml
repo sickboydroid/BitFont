@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>  
+<menu xmlns:android="http://schemas.android.com/apk/res/android">  
+   <item  
+	  android:id="@+id/gradient_color"  
+	  android:title="@string/gradient_color_picker" />  
+   <item  
+	  android:id="@+id/color_picker"  
+	  android:title="@string/color_picker"/>  
+   <item  
+	  android:id="@+id/color_platte"  
+	  android:title="@string/color_platte"/>  
+</menu>  

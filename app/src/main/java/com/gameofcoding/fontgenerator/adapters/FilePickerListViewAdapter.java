@@ -13,8 +13,10 @@ import android.widget.TextView;
 import java.util.Arrays;
 import java.io.FileFilter;
 import com.gameofcoding.fontgenerator.activities.FilePickerActivity;
+import com.gameofcoding.fontgenerator.utils.XLog;
 
 public class FilePickerListViewAdapter extends BaseAdapter {
+   private static final String TAG = "FilePickerListViewAdapter";
    private Context context;
    private int mFileType;
    ArrayList<File> files;
@@ -32,9 +34,12 @@ public class FilePickerListViewAdapter extends BaseAdapter {
    }
 
    public void loadFiles() {
-	  // load dirs first and then files
 	  ArrayList<File> files = new ArrayList<File>();
-	  File[] arrFiles = root.listFiles();
+	  if (getCurrentRoot() == null) {
+		 XLog.w(TAG, "loadFile(): getCurrentRoot() returned null, cannot load files!");
+		 return; 
+	  }
+	  File[] arrFiles = getCurrentRoot().listFiles();
 	  Arrays.sort(arrFiles);
 
 	  // dirs

@@ -8,6 +8,8 @@
    <string name="generating">Generating...</string>
    <string name="warn_font_greater_than_page"><b>FONT SIZE</b> can\'t be greater than <b>PAGE SIZE</b></string>
    <string name="go_up">../ (Go Up)</string>
+   <string name="color_picker">Color Picker</string>
+   <string name="select_color">Select color</string>
    <string name="file_does_not_exist">File does not exist!!</string>
    <string name="request_pick_file">Please pick a file...</string>
    <string name="request_select_dir">Please select a destination directory...</string>
@@ -15,6 +17,7 @@
    <string name="warn_empty_edittext">Cannot be empty!!</string>
    <string name="warn_enter_higher_num">Value cannot be less than "%d"</string>
    <string name="warn_enter_smaller_num">Value cannot be greater than "%d"</string>
+   <string name="text_copied_confirmation">Text copied confirmation!</string>
    <string name="ok">OK</string>
    <string name="cancel">cancel</string>
    <string name="label_font_name">Font Name:</string>
@@ -29,4 +32,13 @@
    <string name="exit">Exit</string>
    <string name="try_again">Try again</string>
    <string name="closing_app">Closing app&#8230;</string>
+   <string name="color">Color</string>
+   <string name="alpha">Alpha</string>
+   <string name="red">Red</string>
+   <string name="green">Green</string>
+   <string name="color_platte">Color Platte</string>
+   <string name="pick_hex_color">Color Picker</string>
+   <string name="gradient_color_picker">Gradient Color Picker</string>
+   <string name="empty_directory">Empty Directory</string>
+   <string name="coming_soon">Coming Soon</string>
 </resources>

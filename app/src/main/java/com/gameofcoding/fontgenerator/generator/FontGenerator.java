@@ -24,6 +24,7 @@ public class FontGenerator {
    public static final int MAX_PAGE_SIZE = 20_000;
    public static final int DEF_FONT_SIZE = 27;
    public static final int DEF_PAGE_SIZE = 512;
+   public static final Color DEF_FONT_COLOR = Color.WHITE;
 
    private FileHandle mFontFile;
    private FileHandle mDestDir;
@@ -31,7 +32,7 @@ public class FontGenerator {
    private int mFontSize = DEF_FONT_SIZE;
    // TODO: Figure out optimal page size automatically
    private int mPageSize = DEF_PAGE_SIZE;
-   private Color mFontColor = new Color(Color.BLACK);
+   private Color mFontColor = DEF_FONT_COLOR;
 
    public FontGenerator() {}
 
@@ -47,14 +48,15 @@ public class FontGenerator {
 		 destDir = new File(mDestDir.file(), mFontName + " (" + i + ")");
 	  }
 	  setDestDir(destDir);
-	  
+
+	  // config font
 	  FreeTypeFontGenerator generator = new FreeTypeFontGenerator(mFontFile);
 	  PixmapPacker packer = new PixmapPacker(getPageSize(), getPageSize(), Pixmap.Format.RGBA8888, 2, false);
 	  FreeTypeFontParameter parameter = new FreeTypeFontParameter();
 	  parameter.size = fontSize;
 	  parameter.characters = FreeTypeFontGenerator.DEFAULT_CHARS;
 	  parameter.flip = false;
-	  parameter.color.set(getFontColor());
+	  parameter.color = getFontColor();
 //	  parameter.borderColor.set(getBorderColor());
 	  parameter.packer = packer;
 	  FreeTypeFontGenerator.FreeTypeBitmapFontData fontData = generator.generateData(parameter);
@@ -84,19 +86,17 @@ public class FontGenerator {
    }
 
    private void writeFont(int fontSize, BitmapFont font, PixmapPacker packer) {
-	  FileHandle destFntFile = new FileHandle(new File(mDestDir.file(), mFontName + ".fnt"));
 	  BitmapFontWriter.setOutputFormat(BitmapFontWriter.OutputFormat.Text);
 	  String[] pageRefs = BitmapFontWriter.writePixmaps(packer.getPages(), mDestDir, mFontName);
-	  // here we must add the png dir to the page refs
-	  for (int i = 0; i < pageRefs.length; i++) {
-		 pageRefs[i] = fontSize + "_" + mFontName + "/" + pageRefs[i];
-	  }
-	  BitmapFontWriter.writeFont(font.getData(), pageRefs, destFntFile, new BitmapFontWriter.FontInfo(mFontName, fontSize), 1, 1);
+	  BitmapFontWriter.writeFont(font.getData(), pageRefs, getDestFntFile(), new BitmapFontWriter.FontInfo(mFontName, fontSize), 1, 1);
    }
-
+   
    //////////////////////
    // GETTERS, SETTERS //
    //////////////////////
+   public FileHandle getDestFntFile() {
+	  return new FileHandle(new File(mDestDir.file(), mFontName + ".fnt"));
+   }
    public FontGenerator setDestDir(File dir) {
 	  if (dir != null) {
 		 if (!dir.isDirectory()) {
@@ -148,12 +148,20 @@ public class FontGenerator {
    public int getPageSize() {
 	  return mPageSize;
    }
-   
+
    public void setFontColor(int r, int g, int b, int alpha) {
-	  mFontColor.set(r/255, g/255, b/255, alpha/255);
+	  mFontColor.set(r / 255, g / 255, b / 255, alpha / 255);
    }
-   
+
+   public FontGenerator setFontColor(Color color) {
+	  if (color != null)
+		 mFontColor.set(color);
+	  return this;
+   }
+
    public Color getFontColor() {
+	  if (mFontColor == null)
+		 mFontColor = DEF_FONT_COLOR;
 	  return mFontColor;
    }
 }

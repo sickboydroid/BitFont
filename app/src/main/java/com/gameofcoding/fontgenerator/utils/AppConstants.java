@@ -26,8 +26,14 @@ public abstract class AppConstants {
    /////////////
    // Extras //
    ////////////
+   public static final String EXTRA_COLOR = "extra_color";
+   public static final String EXTRA_COLOR_ALPHA = "extra_color_alpha";
+   public static final String EXTRA_COLOR_RED = "extra_color_red";
+   public static final String EXTRA_COLOR_GREEN = "extra_color_green";
+   public static final String EXTRA_COLOR_BLUE = "extra_color_blue";
    public static final String EXTRA_FILE_PATH = "extra_file_path";
    public static final String EXTRA_FILE_TYPE = "extra_file_type";
+   public static final String EXTRA_PICKER_TYPE = "extra_picker_type";
 
    /////////////////////
    // Preference keys //

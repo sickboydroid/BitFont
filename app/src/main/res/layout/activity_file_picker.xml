@@ -15,8 +15,7 @@
 		 android:layout_width="0dp"
 		 android:layout_height="match_parent"
 		 android:layout_weight="1"
-		 android:background="@drawable/ripple_effect"
-		 android:clickable="true"
+		 android:background="?android:attr/selectableItemBackground"
 		 android:focusable="true"
 		 android:gravity="center_vertical"
 		 android:text="@string/go_up"/>
@@ -26,6 +25,15 @@
 	  android:layout_width="match_parent"
 	  android:layout_height="0dp"
 	  android:layout_weight="1"/>
+   <TextView
+	  android:id="@+id/tv_empty_directory"
+	  android:layout_width="match_parent"
+	  android:layout_height="0dp"
+	  android:layout_weight="1"
+	  android:gravity="center"
+	  android:text="@string/empty_directory"
+	  android:textAppearance="?android:attr/textAppearanceMedium"
+	  android:visibility="gone"/>
    <LinearLayout
 	  android:layout_width="match_parent"
 	  android:layout_height="wrap_content"

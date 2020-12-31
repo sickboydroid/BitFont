@@ -1,43 +1,45 @@
 package com.gameofcoding.fontgenerator.activities;
 
+import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.backends.android.AndroidApplication;
-import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.gameofcoding.fontgenerator.R;
 import com.gameofcoding.fontgenerator.generator.FontGenerator;
 import com.gameofcoding.fontgenerator.utils.AppConstants;
+import com.gameofcoding.fontgenerator.utils.ColorWrapper;
 import com.gameofcoding.fontgenerator.utils.Utils;
-import java.io.File;
-import javax.microedition.khronos.opengles.GL10;
-import android.app.Activity;
 import com.gameofcoding.fontgenerator.utils.XLog;
-import android.view.Gravity;
+import java.io.File;
 
 public class ConfigFontActivity extends Activity implements OnClickListener {
    public static final String TAG = "ConfigFontActivity";
    public static final int REQUEST_CODE_PICK_DIR = 0x1;
+   public static final int REQUEST_CODE_PICK_COLOR = 0x2;
    private File mFontFile;
    File mDestDir;
    EditText edFontName;
    EditText edFontSize;
    EditText edPageSize;
+   Button btnSelectColor;
+   TextView tvSelectedColor;
    Button btnSelectDestDir;
    TextView tvSelectDestDir;
    Button btnGenerateFont;
+   Color mFontColor;
 
    @Override
    protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +51,13 @@ public class ConfigFontActivity extends Activity implements OnClickListener {
 		 finish();
 	  }
 
+	  // configure layout
 	  setContentView(R.layout.activity_config_font);
 	  edFontName = findViewById(R.id.ed_font_name);
 	  edFontSize = findViewById(R.id.ed_font_size);
 	  edPageSize = findViewById(R.id.ed_page_size);
+	  btnSelectColor = findViewById(R.id.btn_select_color);
+	  tvSelectedColor = findViewById(R.id.tv_selected_color);
 	  btnSelectDestDir = findViewById(R.id.btn_select_dest_dir);
 	  tvSelectDestDir = findViewById(R.id.tv_dest_dir);
 	  btnGenerateFont = findViewById(R.id.btn_generate_font);
@@ -77,11 +82,42 @@ public class ConfigFontActivity extends Activity implements OnClickListener {
 	  edPageSize.addTextChangedListener(textWatcher);
 
 	  // configure Buttons
+	  setDestDir(null);
+	  setFontColor(getFontColor());
+	  btnSelectColor.setOnClickListener(this);
+	  tvSelectedColor.setOnClickListener(this);
 	  btnSelectDestDir.setOnClickListener(this);
 	  btnGenerateFont.setOnClickListener(this);
+   }
 
-	  setDestDir(Utils.getDefaultExtDir());
-   };
+   public void setFontColor(Color fontColor) {
+	  if (fontColor != null) {
+		 String hexColor = ColorWrapper.toHex(fontColor);
+		 tvSelectedColor.setText(hexColor);
+
+		 int backgroundColor = fontColor.toArgb();
+		 int textColor = backgroundColor ^ 0x00FFFFFF;
+		 tvSelectedColor.setBackgroundColor(backgroundColor);
+		 tvSelectedColor.setTextColor(textColor);
+		 mFontColor = fontColor;
+	  }
+   }
+
+   public Color getFontColor() {
+	  if (mFontColor == null)
+		 mFontColor = ColorWrapper.wrap(FontGenerator.DEF_FONT_COLOR);
+	  return mFontColor;
+   }
+
+   public FontGenerator initFontGenerator() {
+	  return new FontGenerator()
+		 .setFontName(edFontName.getText().toString())
+		 .setDestDir(getDestDir())
+		 .setFontFile(mFontFile)
+		 .setFontSize(Integer.valueOf(edFontSize.getText().toString()))
+		 .setFontColor(ColorWrapper.wrap(getFontColor()))
+		 .setPageSize(Integer.valueOf(edPageSize.getText().toString()));
+   }
 
    @Override
    public void onClick(View view) {
@@ -92,10 +128,59 @@ public class ConfigFontActivity extends Activity implements OnClickListener {
 		 case R.id.btn_generate_font:
 			generateFont();
 			break;
+		 case R.id.btn_select_color:
+			selectColor(view);
+			break;
+		 case R.id.tv_selected_color:
+			copyColor();
+			break;
 	  }
    }
 
-   public void handleTextChangedEvents() {
+   private void copyColor() {
+	  ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE); 
+
+	  ClipData clip = ClipData.newPlainText("color",
+											ColorWrapper.toHex(getFontColor()));
+	  clipboard.setPrimaryClip(clip);
+	  Utils.showToast(getApplicationContext(), R.string.text_copied_confirmation);
+
+   }
+
+   private void selectColor(View view) {
+	  PopupMenu popup = new PopupMenu(ConfigFontActivity.this, view);  
+	  popup.getMenuInflater().inflate(R.menu.menu_color_picke_type, popup.getMenu());  
+
+	  popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {  
+			public boolean onMenuItemClick(MenuItem item) {
+			   Intent colorPickerActivity = new Intent(ConfigFontActivity.this, ColorPickerActivity.class);
+			   switch (item.getItemId()) {
+				  case R.id.color_platte:
+					 Utils.showToast(getApplicationContext(), R.string.coming_soon);
+					 return false;
+//					 colorPickerActivity.putExtra(AppConstants.EXTRA_PICKER_TYPE,
+//												  ColorPickerActivity.TYPE_PICK_FROM_PLATTE);
+					 //break;
+				  case R.id.color_picker:
+					 colorPickerActivity.putExtra(AppConstants.EXTRA_PICKER_TYPE,
+												  ColorPickerActivity.TYPE_PICK_FROM_PICKER);
+					 break;
+				  case R.id.gradient_color:
+					 Utils.showToast(getApplicationContext(), R.string.coming_soon);
+					 return false;
+//					 colorPickerActivity.putExtra(AppConstants.EXTRA_PICKER_TYPE,
+//												  ColorPickerActivity.TYPE_PICK_FROM_GRADIENT);
+//					 break;
+			   }
+			   colorPickerActivity.putExtra(AppConstants.EXTRA_COLOR, mFontColor.toArgb());
+			   startActivityForResult(colorPickerActivity, REQUEST_CODE_PICK_COLOR);
+			   return true;  
+			}  
+		 });  
+	  popup.show();
+   }
+
+   public boolean handleTextChangedEvents() {
 	  boolean canGenerateFont = true;
 	  String fontName = edFontName.getText().toString();
 	  int fontSize = -1;
@@ -115,7 +200,7 @@ public class ConfigFontActivity extends Activity implements OnClickListener {
 		 XLog.v(TAG, "Excep. occured while getting page size from EditText", e);
 		 pageSize = Integer.MAX_VALUE;
 	  }
-	  
+
 	  // Font name
 	  if (fontName.length() <= 0) {
 		 canGenerateFont = false;
@@ -163,6 +248,7 @@ public class ConfigFontActivity extends Activity implements OnClickListener {
 
 	  // Set 'Generate' button either 'enabled' or 'disabled'
 	  btnGenerateFont.setEnabled(canGenerateFont);
+	  return canGenerateFont;
    }
 
    @Override
@@ -171,6 +257,11 @@ public class ConfigFontActivity extends Activity implements OnClickListener {
 		 case REQUEST_CODE_PICK_DIR:
 			if (resultCode == RESULT_OK)
 			   setDestDir(new File(data.getStringExtra(AppConstants.EXTRA_FILE_PATH)));
+			break;
+		 case REQUEST_CODE_PICK_COLOR:
+			if (resultCode == RESULT_OK)
+			   setFontColor(Color.valueOf(data.getIntExtra(AppConstants.EXTRA_COLOR, 
+														   FontGenerator.DEF_FONT_COLOR.toIntBits())));
 			break;
 	  }
 	  super.onActivityResult(requestCode, resultCode, data);
@@ -189,24 +280,25 @@ public class ConfigFontActivity extends Activity implements OnClickListener {
 		 return;
 	  }
 	  Toast toast = Toast.makeText(getApplicationContext(), R.string.generating, Toast.LENGTH_LONG);
-	  toast.setGravity(Gravity.TOP, 0, 0);
+	  toast.setGravity(Gravity.TOP, 0, 120);
 	  toast.show();
 
-	  FontGenerator generator = new FontGenerator()
-		 .setFontName(edFontName.getText().toString())
-		 .setDestDir(getDestDir())
-		 .setFontFile(mFontFile)
-		 .setFontSize(Integer.valueOf(edFontSize.getText().toString()))
-		 .setPageSize(Integer.valueOf(edPageSize.getText().toString()));
-	  GeneratorLibGDXActivity.generator = generator;
-	  startActivity(new Intent(ConfigFontActivity.this, GeneratorLibGDXActivity.class));
+	  // Check whether all values are valid
+	  if (handleTextChangedEvents()) {
+		 try {
+			GeneratorLibGDXActivity.generator = initFontGenerator();
+			startActivity(new Intent(ConfigFontActivity.this, GeneratorLibGDXActivity.class));
+		 } finally {
+			finish();
+		 }
+	  }
    }
 
    public void setDestDir(File dir) {
-	  if (dir != null && dir.isDirectory()) {
-		 mDestDir = dir;
-		 tvSelectDestDir.setText(dir.toString());
-	  }
+	  if (dir == null || !dir.isDirectory()) 
+		 dir = Utils.getDefaultExtDir();
+	  mDestDir = dir;
+	  tvSelectDestDir.setText(dir.toString());
    }
 
    public File getDestDir() {

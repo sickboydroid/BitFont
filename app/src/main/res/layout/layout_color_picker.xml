@@ -1,0 +1,37 @@
+<LinearLayout
+   xmlns:android="http://schemas.android.com/apk/res/android"
+   xmlns:app="http://schemas.android.com/apk/res-auto"
+   android:layout_width="match_parent"
+   android:layout_height="match_parent"
+   android:orientation="vertical">
+   <com.rarepebble.colorpicker.ColorPickerView
+	  android:id="@+id/colorPicker"
+	  android:layout_width="match_parent"
+	  android:layout_height="0dp"
+	  android:layout_weight="1"
+	  app:colorpicker_showAlpha="true"
+	  app:colorpicker_showHex="true"
+	  app:colorpicker_showPreview="true"/>
+   <LinearLayout
+	  android:layout_width="match_parent"
+	  android:layout_height="wrap_content"
+	  android:gravity="end">
+	  <Button
+		 style="?android:attr/buttonBarButtonStyle"
+		 android:id="@+id/btn_cancel"
+		 android:layout_width="wrap_content"
+		 android:layout_height="wrap_content"
+		 android:text="@string/cancel"/>
+	  <View
+		 android:id="@+id/view_btn_space"
+		 android:layout_width="0dp"
+		 android:layout_height="1dp"
+		 android:layout_weight="1"/>
+	  <Button
+		 style="?android:attr/buttonBarButtonStyle"
+		 android:id="@+id/btn_ok"
+		 android:layout_width="wrap_content"
+		 android:layout_height="wrap_content"
+		 android:text="@string/ok"/>
+   </LinearLayout>
+</LinearLayout>

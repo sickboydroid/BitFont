@@ -17,6 +17,7 @@ import android.os.Environment;
 import android.content.Intent;
 import com.gameofcoding.fontgenerator.utils.AppConstants;
 import android.widget.Button;
+import android.view.ViewGroup;
 
 public class FilePickerActivity extends Activity {
    public static final int PICK_FILE = 0x0;
@@ -24,6 +25,7 @@ public class FilePickerActivity extends Activity {
    public static final int SELECT_DIR = 0x1;
 
    ListView mListView;
+   TextView mTvEmptyFolder;
    ArrayList<File> currentFiles;
    int mFileType;
 
@@ -31,8 +33,13 @@ public class FilePickerActivity extends Activity {
    protected void onCreate(Bundle savedInstanceState) {
 	  super.onCreate(savedInstanceState);
 	  setContentView(R.layout.activity_file_picker);
+	  getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
+							ViewGroup.LayoutParams.MATCH_PARENT);
+
+	  // initialize views
 	  TextView tvGoUp = findViewById(R.id.tv_go_up);
 	  mListView = findViewById(R.id.list_view);
+	  mTvEmptyFolder = findViewById(R.id.tv_empty_directory);
 	  Button btnOk = findViewById(R.id.btn_ok);
 	  Button btnCancel = findViewById(R.id.btn_cancel);
 
@@ -106,5 +113,16 @@ public class FilePickerActivity extends Activity {
 	  FilePickerListViewAdapter adapter =
 		 new FilePickerListViewAdapter(mFileType, getApplicationContext(), dir);
 	  mListView.setAdapter(adapter);
+	  if (adapter.getCount() == 0) {
+		 if (mListView.getVisibility() != View.GONE) {
+			mListView.setVisibility(View.GONE);
+			mTvEmptyFolder.setVisibility(View.VISIBLE);
+		 }
+	  } else {
+		 if (mListView.getVisibility() != View.VISIBLE) {
+			mListView.setVisibility(View.VISIBLE);
+			mTvEmptyFolder.setVisibility(View.GONE);
+		 }
+	  }
    }
 }
